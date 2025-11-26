@@ -1,68 +1,62 @@
-# 🎰 Lucky Draw Wheel - Production Ready
+# 🎰 Lucky Draw Wheel - GitHub Pages Ready
 
-A perfect accuracy lucky draw wheel application with backend winner determination and precise wheel animation.
+A perfect accuracy lucky draw wheel application with frontend-only implementation using localStorage for persistence.
 
 ## ✨ Features
 
-- **100% Accurate**: Wheel always stops at the correct sector determined by backend
-- **Backend Winner Selection**: Single source of truth prevents manipulation
+- **100% Accurate**: Wheel always stops at the correct sector using precise mathematical calculation
+- **Frontend Winner Selection**: Same algorithm as backend version for consistency
 - **Real-time Animation**: Smooth wheel spinning with easing effects
 - **Dynamic Participants**: Support 2-1000 participants with automatic wheel resizing
 - **Winner Removal**: Winners are removed and wheel redraws for next round
+- **LocalStorage Persistence**: Participants are saved between sessions
 - **Console Logging**: Real-time verification of winner selection and wheel stopping
-- **Production Optimized**: Clean, minimal code with no bloat
+- **Production Optimized**: Clean, minimal code with no external dependencies
 
 ## 🎯 How It Works
 
-### Backend Algorithm (Single Source of Truth)
+### Winner Selection Algorithm (Frontend Implementation)
 ```javascript
-// 1. Backend selects winner randomly
+// 1. Select winner randomly (same as backend)
 const winnerIndex = Math.floor(Math.random() * participants.length);
 
 // 2. Calculate precise final angle
 const segmentAngle = 360 / participants.length;
 const winnerCenterOriginal = winnerIndex * segmentAngle + segmentAngle / 2;
-const targetRotation = 90 - winnerCenterOriginal;
+const targetRotation = 90 - winnerCenterOriginal; // Pointer at bottom
 const normalizedTarget = ((targetRotation % 360) + 360) % 360;
 const finalAngle = 8 * 360 + normalizedTarget; // 8 spins + exact position
 
-// 3. Return winner and final angle to frontend
-return { winner, winnerIndex, finalAngle };
-```
-
-### Frontend Animation
-```javascript
-// Frontend receives finalAngle and animates wheel to exact position
+// 3. Animate wheel to final angle
 const currentAngle = startRotation + finalAngle * easeOut;
 this.currentRotation = (currentAngle * Math.PI) / 180;
 ```
 
 ## 🚀 Live Demo
 
-**🎉 [Play Lucky Draw Wheel](https://luckydraw-kuraimoss.vercel.app/)**
+**🎉 [Play Lucky Draw Wheel](https://kuraimoss.github.io/luckydraw/)**
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Node.js + Vercel Serverless Functions
 - **Frontend**: Vanilla JavaScript + HTML5 Canvas
+- **Storage**: Browser localStorage for persistence
 - **Styling**: CSS3 with animations
-- **Deployment**: Vercel (free hosting)
+- **Deployment**: GitHub Pages (free hosting)
 
 ## 📁 Project Structure
 
 ```
 luckydraw/
-├── api/
-│   └── index.js          # Vercel serverless function
-├── public/
-│   ├── index.html        # Main HTML
+├── docs/                    # GitHub Pages root
+│   ├── index.html          # Main HTML
 │   ├── css/
-│   │   └── style.css     # Styling
+│   │   └── style.css       # Styling
 │   └── js/
-│       └── app.js        # Frontend logic
-├── vercel.json           # Vercel deployment config
-├── package.json          # Dependencies
-└── README.md            # This file
+│       └── app.js          # Frontend logic
+├── public/                 # Source files
+├── .gitignore             # Git ignore rules
+├── README.md              # This file
+└── server.js              # Original backend (for reference)
 ```
 
 ## 🎮 Usage
@@ -71,10 +65,10 @@ luckydraw/
 2. **Spin Wheel**: Click "SPIN THE WHEEL" button
 3. **View Results**: Wheel stops at winner, modal shows result
 4. **Continue**: Winner removed, wheel redraws for next round
+5. **Persistence**: Participants are automatically saved to browser storage
 
 ### Console Output
 ```
-🎯 Winner: 7 (index 2)
 🎯 Winner: 7 (index 2)
 🎡 Wheel stopped at: 7
 🎉 Winner: 7!
@@ -87,81 +81,83 @@ luckydraw/
 git clone https://github.com/kuraimoss/luckydraw.git
 cd luckydraw
 
-# Install dependencies
-npm install
-
-# Run locally
-npm start
-# Open http://localhost:3825
+# Open in browser (no server needed)
+# Just open docs/index.html in your browser
 ```
 
-## 🚀 Deployment
+## 🚀 Deployment (GitHub Pages)
 
-### Automatic Deployment (Vercel)
+### Automatic Deployment
 1. Fork this repository
-2. Connect to Vercel: https://vercel.com
-3. Import your forked repository
-4. Deploy automatically
+2. Go to repository Settings → Pages
+3. Set source to "Deploy from a branch"
+4. Select branch "main" and folder "/docs"
+5. Save - GitHub will deploy automatically
 
 ### Manual Deployment
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
-
-# For production deployment
-vercel --prod
+# Files are already in docs/ folder
+# Just push to GitHub and enable Pages as above
 ```
 
 ## 🎯 Algorithm Accuracy
 
-- **Tested**: 499,500 test cases (2-1000 participants × each winner index)
-- **Accuracy**: 100.000000% - Perfect precision
-- **Method**: Backend determines winner → calculates exact angle → frontend animates
+- **Method**: Mathematical calculation ensures perfect precision
+- **No External Dependencies**: Works offline
+- **Same Algorithm**: Consistent with backend version
+- **Deterministic**: Same winner index → same final angle
 
 ### Why It's Perfect
 
-1. **Deterministic**: Same winner index → same final angle
-2. **No Floating Point Errors**: Circular angle normalization
-3. **Single Source of Truth**: Backend controls winner selection
-4. **Precise Calculation**: Mathematical formula ensures accuracy
+1. **Mathematical Precision**: Exact angle calculation
+2. **No Network Latency**: Instant response
+3. **Offline Capable**: Works without internet
+4. **Browser Storage**: Participants persist between sessions
 
 ## 📊 Performance
 
-- **File Size**: 20KB frontend, 8KB backend
-- **Load Time**: <1 second
+- **File Size**: 20KB total (HTML + CSS + JS)
+- **Load Time**: Instant (no server requests)
 - **Animation**: 60fps smooth spinning
 - **Compatibility**: All modern browsers
+- **Storage**: Uses browser localStorage
 
 ## 🎨 Customization
 
 ### Change Default Participants
-Edit `api/index.js`:
+Edit `docs/js/app.js` loadParticipants function:
 ```javascript
-const participants = [1, 3, 7, 20, 50, 75, 100, 500]; // Your values
+participantValues = [1, 3, 7, 20, 50, 75, 100, 500]; // Your values
 ```
 
 ### Adjust Spin Duration
-Edit `public/js/app.js`:
+Edit `docs/js/app.js`:
 ```javascript
 this.spinDuration = 6000; // 6 seconds
 ```
 
 ### Change Colors
-Edit `public/js/app.js` colors array:
+Edit `docs/js/app.js` colors array:
 ```javascript
 this.colors = ['#FF6B6B', '#4ECDC4', /* ... */];
 ```
+
+## 🔄 Data Persistence
+
+- **Automatic Save**: Participants saved when added/removed
+- **Browser Storage**: Uses localStorage
+- **Session Recovery**: Participants restored on page reload
+- **No Data Loss**: Survives browser restarts
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create feature branch: `git checkout -b feature-name`
-3. Commit changes: `git commit -am 'Add feature'`
-4. Push to branch: `git push origin feature-name`
-5. Submit pull request
+3. Make changes to files in `docs/` folder
+4. Test locally by opening `docs/index.html`
+5. Commit changes: `git commit -am 'Add feature'`
+6. Push to branch: `git push origin feature-name`
+7. Submit pull request
 
 ## 📄 License
 
@@ -171,8 +167,8 @@ MIT License - feel free to use for any purpose!
 
 - **Algorithm**: Precise mathematical calculation for perfect accuracy
 - **Design**: Clean, modern UI with smooth animations
-- **Code**: Optimized for production with no bloat
+- **Implementation**: Frontend-only with localStorage persistence
 
 ---
 
-**🎰 Enjoy your perfect lucky draw wheel! Always fair, always accurate.** ✨
+**🎰 Enjoy your perfect lucky draw wheel! Always fair, always accurate, works offline!** ✨
