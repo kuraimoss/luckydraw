@@ -420,7 +420,7 @@ class LuckyDraw {
         // Calculate precise final angle (same algorithm as backend)
         const segmentAngle = 360 / this.participants.length;
         const winnerCenterOriginal = winnerIndex * segmentAngle + segmentAngle / 2;
-        const targetRotation = 90 - winnerCenterOriginal; // Pointer is at 90° (bottom)
+        const targetRotation = 270 - winnerCenterOriginal; // Pointer is at 270° (top)
         const normalizedTarget = ((targetRotation % 360) + 360) % 360;
         const fullRotations = 8; // 8 full spins for dramatic effect
         const finalAngle = fullRotations * 360 + normalizedTarget;
