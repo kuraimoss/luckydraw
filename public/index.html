@@ -1,246 +1,373 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎰 Lucky Draw - GJAI</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8" />
+  <title>Random Name Picker Wheel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="animated-bg">
-        <div class="gradient-sphere sphere-1"></div>
-        <div class="gradient-sphere sphere-2"></div>
-        <div class="gradient-sphere sphere-3"></div>
-        <div class="particles" id="particles"></div>
-        <!-- Christmas Snowflakes -->
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-        <div class="snowflake">❄</div>
-    </div>
+  <div class="bg-layer"></div>
 
-    <!-- Main Container -->
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="logo-container">
-                <div class="logo-icon">
-                    <i class="fas fa-gift"></i>
-                </div>
-                <div class="logo-text">
-                    <h1>🎄 Christmas Lucky Draw 🎄</h1>
-                    <span class="tagline">GJAI Holiday Special Event ❄</span>
-                </div>
-            </div>
-            <div class="header-controls">
-                <button class="fullscreen-btn" id="fullscreenBtn" title="Toggle Fullscreen">
-                    <i class="fas fa-expand"></i>
-                </button>
-            </div>
-        </header>
+  <!-- Floating particles -->
+  <div id="floating-particles"></div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Left Panel - Wheel -->
-            <section class="wheel-section">
-                <div class="wheel-wrapper">
-                    <!-- Decorative Ring -->
-                    <div class="wheel-outer-ring">
-                        <div class="ring-light" style="--i:0"></div>
-                        <div class="ring-light" style="--i:1"></div>
-                        <div class="ring-light" style="--i:2"></div>
-                        <div class="ring-light" style="--i:3"></div>
-                        <div class="ring-light" style="--i:4"></div>
-                        <div class="ring-light" style="--i:5"></div>
-                        <div class="ring-light" style="--i:6"></div>
-                        <div class="ring-light" style="--i:7"></div>
-                        <div class="ring-light" style="--i:8"></div>
-                        <div class="ring-light" style="--i:9"></div>
-                        <div class="ring-light" style="--i:10"></div>
-                        <div class="ring-light" style="--i:11"></div>
-                        <div class="ring-light" style="--i:12"></div>
-                        <div class="ring-light" style="--i:13"></div>
-                        <div class="ring-light" style="--i:14"></div>
-                        <div class="ring-light" style="--i:15"></div>
-                        <div class="ring-light" style="--i:16"></div>
-                        <div class="ring-light" style="--i:17"></div>
-                        <div class="ring-light" style="--i:18"></div>
-                        <div class="ring-light" style="--i:19"></div>
-                    </div>
-                    
-                    <!-- Pointer -->
-                    <div class="wheel-pointer">
-                        <div class="pointer-body">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                    
-                    <!-- Wheel Canvas -->
-                    <div class="wheel-container">
-                        <canvas id="wheelCanvas" width="450" height="450"></canvas>
-                    </div>
-                    
-                </div>
-                
-                <!-- Spin Button -->
-                <button class="main-spin-btn" id="spinBtn">
-                    <span class="btn-content">
-                        <i class="fas fa-dice"></i>
-                        <span>SPIN THE WHEEL</span>
-                    </span>
-                    <div class="btn-glow"></div>
-                </button>
+  <div class="app-container">
+    <main class="main-layout">
+      <!-- Tengah: wheel saja -->
+      <section class="main-column">
+        <div class="wheel-container">
+            <canvas
+              id="wheelCanvas"
+              width="550"
+              height="550"
+              style="width:550px; height:550px;"
+            ></canvas>
 
-                <!-- Speed Control -->
-                <div class="speed-control">
-                    <label for="speedSlider" class="speed-label">
-                        <i class="fas fa-tachometer-alt"></i>
-                        Spin Speed: <span id="speedValue">6</span>s
-                    </label>
-                    <div class="speed-inputs-container">
-                        <div class="speed-slider-container">
-                            <span class="speed-min">Fast</span>
-                            <input type="range" id="speedSlider" min="3" max="12" value="6" step="0.5" class="speed-slider">
-                            <span class="speed-max">Slow</span>
-                        </div>
-                        <div class="speed-number-container">
-                            <input type="number" id="speedNumber" min="3" max="12" value="6" step="0.5" class="speed-number">
-                            <span class="speed-unit">seconds</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <!-- Pointer SPIN di tengah -->
+            <button
+              id="pointerButton"
+              class="pointer-button"
+              aria-label="Spin"
+            >
+              <svg
+                width="120"
+                height="120"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient
+                    id="pointerGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="0%" stop-color="#f97316" />
+                    <stop offset="100%" stop-color="#facc15" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M50 5
+                      C30 25, 20 40, 20 55
+                      A30 30 0 1 0 80 55
+                      C80 40, 70 25, 50 5Z"
+                  fill="url(#pointerGradient)"
+                />
+                <text
+                  x="50"
+                  y="68"
+                  font-size="18"
+                  font-family="Arial"
+                  font-weight="bold"
+                  text-anchor="middle"
+                  fill="#0f172a"
+                >
+                  SPIN
+                </text>
+              </svg>
+            </button>
+          </div>
 
-            <!-- Right Panel - Participants -->
-            <section class="participants-section">
-                <div class="panel-card">
-                    <div class="panel-header">
-                        <h2><i class="fas fa-users"></i> Participants</h2>
-                        <span class="participant-count" id="participantCount">0</span>
-                    </div>
-                    
-                    <!-- Bulk Input -->
-                    <div class="input-section">
-                        <div class="input-tabs">
-                            <button class="tab-btn active" data-tab="bulk">
-                                <i class="fas fa-list"></i> Bulk Add
-                            </button>
-                            <button class="tab-btn" data-tab="single">
-                                <i class="fas fa-user-plus"></i> Single Add
-                            </button>
-                        </div>
-                        
-                        <div class="tab-content active" id="bulkTab">
-                            <textarea id="bulkInput" class="bulk-textarea" placeholder="Enter names (one per line):&#10;John Doe&#10;Jane Smith&#10;Bob Wilson&#10;..."></textarea>
-                            <button class="add-btn" id="bulkAddBtn">
-                                <i class="fas fa-plus-circle"></i> Add All Names
-                            </button>
-                        </div>
-                        
-                        <div class="tab-content" id="singleTab">
-                            <div class="single-input-group">
-                                <input type="text" id="singleInput" class="single-input" placeholder="Enter participant name...">
-                                <button class="add-btn-icon" id="singleAddBtn">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Participants List -->
-                    <div class="participants-list-container">
-                        <div class="list-header">
-                            <span>Name</span>
-                            <button class="clear-all-btn" id="clearAllBtn">
-                                <i class="fas fa-trash-alt"></i> Clear All
-                            </button>
-                        </div>
-                        <div class="participants-list" id="participantsList">
-                            <!-- Participants will be rendered here -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
+          <div id="resultBox" class="result-box"></div>
+          <p class="help-text">
+            Klik tombol <strong>SPIN</strong> untuk memilih pemenang secara acak.
+          </p>
 
-    <!-- Footer -->
-    <footer class="app-footer">
-        <div class="footer-content">
-            <div class="footer-decoration">
-                <span class="snowflake">❄</span>
-                <span class="christmas-tree">🎄</span>
-                <span class="snowflake">❄</span>
-            </div>
-            <p>
-                <span class="merry-christmas">🎅 Merry Christmas! 🎅</span><br>
-                Created with <i class="fas fa-heart christmas-heart"></i> by
-                <a href="https://github.com/kuraimoss" target="_blank" rel="noopener noreferrer" class="creator-link">
-                    <strong>kuraimoss</strong>
-                </a>
-            </p>
-            <div class="social-links">
-                <a href="https://github.com/kuraimoss" target="_blank" rel="noopener noreferrer" title="GitHub" class="social-link github">
-                    <i class="fab fa-github"></i>
-                    <span class="social-text">GitHub</span>
-                </a>
-                <a href="https://www.linkedin.com/in/saintripentumanggor" target="_blank" rel="noopener noreferrer" title="LinkedIn" class="social-link linkedin">
-                    <i class="fab fa-linkedin"></i>
-                    <span class="social-text">LinkedIn</span>
-                </a>
-            </div>
-            <div class="footer-decoration">
-                <span class="gift">🎁</span>
-                <span class="star">⭐</span>
-                <span class="gift">🎁</span>
-            </div>
+          <!-- Trophy Icon -->
+          <button id="trophyButton" class="trophy-button" aria-label="Lihat riwayat pemenang">
+          <svg width="45" height="45" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Gradien emas untuk piala -->
+              <linearGradient id="goldBody" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fef3c7"/>
+                <stop offset="40%" stop-color="#facc15"/>
+                <stop offset="100%" stop-color="#b45309"/>
+              </linearGradient>
+
+              <!-- Gradien untuk dasar piala -->
+              <linearGradient id="baseGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0f172a"/>
+                <stop offset="100%" stop-color="#020617"/>
+              </linearGradient>
+
+              <!-- Highlight kecil di badan piala -->
+              <linearGradient id="highlight" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.85)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Badan piala -->
+            <path
+              d="M30 25
+                 H90
+                 V45
+                 C90 65 78 80 60 84
+                  42 80 30 65 30 45
+                 Z"
+              fill="url(#goldBody)"
+              stroke="#92400e"
+              stroke-width="2"
+            />
+
+            <!-- Gagang kiri -->
+            <path
+              d="M30 30
+                 C18 30 14 40 14 50
+                 C14 62 21 70 30 72"
+              fill="none"
+              stroke="#fbbf24"
+              stroke-width="4"
+              stroke-linecap="round"
+            />
+
+            <!-- Gagang kanan -->
+            <path
+              d="M90 30
+                 C102 30 106 40 106 50
+                 C106 62 99 70 90 72"
+              fill="none"
+              stroke="#fbbf24"
+              stroke-width="4"
+              stroke-linecap="round"
+            />
+
+            <!-- Bibir piala (rim) -->
+            <rect
+              x="28"
+              y="21"
+              width="64"
+              height="6"
+              rx="3"
+              fill="#facc15"
+              stroke="#92400e"
+              stroke-width="1.5"
+            />
+
+            <!-- Batang piala -->
+            <path
+              d="M50 84
+                 L70 84
+                 L67 96
+                 L53 96
+                 Z"
+              fill="url(#goldBody)"
+              stroke="#92400e"
+              stroke-width="1.5"
+            />
+
+            <!-- Dasar piala -->
+            <path
+              d="M40 96
+                 H80
+                 V104
+                 H74
+                 V110
+                 H46
+                 V104
+                 H40
+                 Z"
+              fill="url(#baseGradient)"
+              stroke="#020617"
+              stroke-width="1.5"
+            />
+
+            <!-- Highlight di sisi kiri badan piala -->
+            <path
+              d="M36 30
+                 C38 30 46 30 50 32
+                 C44 46 44 60 48 74
+                 C44 73 40 70 36 66
+                 Z"
+              fill="url(#highlight)"
+              opacity="0.55"
+            />
+
+            <!-- Bintang kecil di tengah badan piala -->
+            <path
+              d="M60 48
+                 L62.5 52.8
+                 L67.8 53.5
+                 L63.9 57
+                 L64.9 62.2
+                 L60 59.7
+                 L55.1 62.2
+                 L56.1 57
+                 L52.2 53.5
+                 L57.5 52.8
+                 Z"
+              fill="#fef9c3"
+              stroke="#fbbf24"
+              stroke-width="1"
+            />
+          </svg>
+        </button>
+      </section>
+    </main>
+  </div>
+
+  <!-- FAB untuk buka/tutup sidebar pengaturan -->
+  <button
+    id="settingsOpenFab"
+    class="settings-fab"
+    aria-label="Buka pengaturan"
+  >
+    ⚙
+  </button>
+
+  <!-- Sidebar pengaturan kanan (tanpa overlay) -->
+  <aside id="settingsSidebar" class="settings-sidebar">
+    <div class="settings-inner">
+      <header class="settings-header">
+        <div>
+          <h2>Pengaturan & Peserta</h2>
+          <p>Atur peserta dan perilaku wheel undian.</p>
         </div>
-    </footer>
+        <button
+          id="settingsCloseBtn"
+          class="icon-btn"
+          aria-label="Tutup pengaturan"
+        >
+          ✕
+        </button>
+      </header>
 
-    <!-- Winner Modal -->
-    <div class="modal-overlay" id="winnerModal">
-        <div class="modal-container">
-            <div class="modal-content">
-                <!-- Elegant Trophy Section -->
-                <div class="trophy-container">
-                    <div class="trophy-glow"></div>
-                    <i class="fas fa-trophy trophy-icon"></i>
-                </div>
+      <!-- Input + daftar peserta di sini -->
+      <section class="settings-section">
+        <h3>Input Peserta</h3>
 
-                <!-- Simple Title -->
-                <h2 class="modal-title">🎉 WINNER 🎉</h2>
-
-                <!-- Winner Name Display -->
-                <div class="winner-display">
-                    <span id="winnerName" class="winner-name-text">John Doe</span>
-                </div>
-
-                <!-- Congratulations -->
-                <div class="congrats-section">
-                    <p class="congrats-text">Congratulations!</p>
-                    <p class="congrats-subtext">You are the lucky winner!</p>
-                </div>
-
-                <!-- Close Button -->
-                <button class="modal-close-btn" id="closeModalBtn">
-                    <i class="fas fa-check"></i>
-                    Continue
-                </button>
-            </div>
+        <div class="field-row">
+          <input
+            id="singleNameInput"
+            type="text"
+            placeholder="Nama peserta..."
+          />
+          <button id="addSingleBtn" class="btn-primary">Tambah</button>
         </div>
-    </div>
 
-    <script src="js/app.js"></script>
+        <label for="bulkNames">Tambah banyak nama (1 baris = 1 nama):</label>
+        <textarea
+          id="bulkNames"
+          rows="6"
+          placeholder="Contoh:
+Budi
+Sari
+Andi"
+        ></textarea>
+
+        <button id="addBulkBtn" class="btn-primary full">
+          Tambah Semua
+        </button>
+        <button id="clearBtn" class="btn-danger full">
+          Hapus Semua Peserta
+        </button>
+
+        <div class="list-section">
+          <div class="list-header">
+            <h3>Daftar Peserta</h3>
+            <span class="badge-count" id="countLabel">0</span>
+          </div>
+          <ul id="participantsList"></ul>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Pengaturan Wheel</h3>
+
+        <label for="speedRange">Durasi putaran</label>
+        <input type="range" id="speedRange" min="3" max="9" value="5" />
+        <div class="settings-value">
+          <span id="speedLabel">5</span> detik
+        </div>
+
+        <button id="fullscreenBtn" class="btn-ghost full">
+          Mode Fullscreen
+        </button>
+
+        <p class="hint">
+          Wheel akan berputar cepat di awal dan
+          <strong>melambat</strong> sampai berhenti.
+        </p>
+        <p class="hint">
+          Pointer tidak selalu tepat di tengah segmen, kadang sedikit ke
+          kiri/kanan, namun tetap jauh dari batas antar segmen.
+        </p>
+      </section>
+    </div>
+  </aside>
+
+  <!-- Winner Modal -->
+  <div id="winnerModal" class="modal">
+    <div class="modal-content winner-modal-content">
+      <div class="winner-celebration">
+        <div class="winner-trophy">🏆</div>
+        <h2 class="winner-title">SELAMAT!</h2>
+        <div class="winner-subtitle">Pemenang Terpilih</div>
+      </div>
+
+      <div class="winner-display">
+        <div class="winner-name-container">
+          <div id="winnerName" class="winner-name"></div>
+          <div class="winner-sparkles">✨⭐✨</div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="removeWinnerBtn" class="btn-secondary">
+          <span>🚫</span> Hapus dari Daftar
+        </button>
+        <button id="closeModal" class="btn-primary">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Winner History Modal -->
+  <div id="historyModal" class="modal">
+    <div class="modal-content history-modal-content">
+      <div class="modal-header">
+        <h2>🏆 Riwayat Pemenang</h2>
+        <button id="closeHistoryModal" class="icon-btn" aria-label="Tutup riwayat">
+          ✕
+        </button>
+      </div>
+      <div id="winnerHistory" class="winner-history-modal">
+        <p class="no-winners">Belum ada pemenang</p>
+      </div>
+      <div class="modal-actions">
+        <button id="clearHistoryBtn" class="btn-danger">Hapus Riwayat</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Message Modal -->
+  <div id="messageModal" class="modal">
+    <div class="modal-content message-modal-content">
+      <p id="messageText"></p>
+      <button id="closeMessage" class="btn-primary">OK</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer" id="footer">
+    <a href="https://linkedin.com/in/saintripentumanggor" target="_blank" aria-label="LinkedIn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+    </a>
+    <a href="https://github.com/kuraimoss" target="_blank" aria-label="GitHub">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+      </svg>
+    </a>
+    <a href="https://instagram.com/kuraimos" target="_blank" aria-label="Instagram">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      </svg>
+    </a>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>

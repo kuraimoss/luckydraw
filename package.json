@@ -1,32 +1,31 @@
 {
   "name": "luckydraw",
   "version": "1.0.0",
-  "description": "Lucky Draw Wheel - Perfect accuracy frontend implementation",
+  "description": "Lucky Draw Perayaan Akhir Tahun GJAI",
   "main": "server.js",
   "scripts": {
-    "serve": "npx http-server docs -p 3000",
-    "dev": "npm run serve",
-    "start": "npm run serve",
-    "test": "echo \"No tests specified\""
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kuraimoss/luckydraw.git"
   },
   "keywords": [
-    "lucky-draw",
-    "wheel",
-    "frontend",
-    "canvas",
-    "javascript"
+    "lucky",
+    "draw"
   ],
-  "author": "kuraimoss",
-  "license": "MIT",
+  "author": "kuraimos",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/kuraimoss/luckydraw/issues"
   },
-  "homepage": "https://kuraimoss.github.io/luckydraw/",
+  "homepage": "https://github.com/kuraimoss/luckydraw#readme",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^21.4.4",
+    "@hapi/inert": "^7.1.0"
   }
 }
