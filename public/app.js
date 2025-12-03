@@ -82,47 +82,34 @@ const sliceColors = [
   '#9d174d'  // wine
 ];
 
-// ========== API helpers ==========
+// ========== Local Storage helpers ==========
 
-async function loadParticipants() {
-  try {
-    const res = await fetch('/api/participants');
-    const json = await res.json();
-    if (json.status === 'success') {
-      participants = json.data.participants || [];
-    } else {
-      participants = [];
-    }
-  } catch (err) {
-    console.error('Gagal load peserta:', err);
+function loadParticipants() {
+  const saved = localStorage.getItem('participants');
+  if (saved) {
+    participants = JSON.parse(saved);
+  } else {
     participants = [];
   }
   renderParticipantsList();
 }
 
-async function addSingleParticipant() {
+function saveParticipants() {
+  localStorage.setItem('participants', JSON.stringify(participants));
+}
+
+function addSingleParticipant() {
   const name = singleNameInput.value.trim();
   if (!name) return;
 
-  try {
-    const res = await fetch('/api/participants', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name })
-    });
-    const json = await res.json();
-    if (json.status !== 'success') {
-      throw new Error(json.message || 'Gagal menambah peserta');
-    }
-    participants = json.data.participants || [];
-    singleNameInput.value = '';
-    renderParticipantsList();
-  } catch (err) {
-    showMessage(err.message);
-  }
+  const newParticipant = { id: Date.now().toString(), name };
+  participants.push(newParticipant);
+  saveParticipants();
+  singleNameInput.value = '';
+  renderParticipantsList();
 }
 
-async function addBulkParticipants() {
+function addBulkParticipants() {
   const raw = bulkNames.value;
   const lines = raw
     .split(/\r?\n/)
@@ -131,60 +118,29 @@ async function addBulkParticipants() {
 
   if (!lines.length) return;
 
-  try {
-    const res = await fetch('/api/participants/bulk', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ names: lines })
-    });
-    const json = await res.json();
-    if (json.status !== 'success') {
-      throw new Error(json.message || 'Gagal menambah peserta');
-    }
-    participants = json.data.participants || [];
-    bulkNames.value = '';
-    renderParticipantsList();
-  } catch (err) {
-    showMessage(err.message);
-  }
+  const newParticipants = lines.map(name => ({ id: Date.now().toString() + Math.random(), name }));
+  participants.push(...newParticipants);
+  saveParticipants();
+  bulkNames.value = '';
+  renderParticipantsList();
 }
 
-async function removeParticipant(id) {
-  try {
-    const res = await fetch(`/api/participants/${encodeURIComponent(id)}`, {
-      method: 'DELETE'
-    });
-    const json = await res.json();
-    if (json.status !== 'success') {
-      throw new Error(json.message || 'Gagal menghapus peserta');
-    }
-    participants = json.data.participants || [];
-    renderParticipantsList();
-  } catch (err) {
-    showMessage(err.message);
-  }
+function removeParticipant(id) {
+  participants = participants.filter(p => p.id !== id);
+  saveParticipants();
+  renderParticipantsList();
 }
 
-async function clearParticipants() {
+function clearParticipants() {
   if (!participants.length) return;
   if (!confirm('Hapus semua peserta?')) return;
 
-  try {
-    const res = await fetch('/api/participants', {
-      method: 'DELETE'
-    });
-    const json = await res.json();
-    if (json.status !== 'success') {
-      throw new Error(json.message || 'Gagal menghapus peserta');
-    }
-    participants = [];
-    currentRotation = 0;
-    renderParticipantsList();
-    resultBox.textContent = '';
-    resultBox.classList.remove('show');
-  } catch (err) {
-    showMessage(err.message);
-  }
+  participants = [];
+  saveParticipants();
+  currentRotation = 0;
+  renderParticipantsList();
+  resultBox.textContent = '';
+  resultBox.classList.remove('show');
 }
 
 // ========== Render list & wheel ==========
@@ -358,7 +314,7 @@ function rebuildWheelBuffer() {
 
 // ========== Spin logic ==========
 
-async function spin() {
+function spin() {
   if (isSpinning) return;
   if (participants.length < 2) {
     showMessage('Minimal 2 peserta untuk spin.');
@@ -371,38 +327,23 @@ async function spin() {
   wheelCanvas.classList.add('spinning');
   resultBox.textContent = 'Memutar...';
 
-  try {
-    const res = await fetch('/api/spin', { method: 'POST' });
-    const json = await res.json();
-    if (json.status !== 'success') {
-      throw new Error(json.message || 'Gagal melakukan spin');
-    }
+  // Pick random winner
+  const winnerIndex = Math.floor(Math.random() * participants.length);
+  const winner = participants[winnerIndex];
 
-    participants = json.data.participants || [];
-    const winnerIndex = json.data.winnerIndex;
-    const winner = json.data.winner || participants[winnerIndex];
+  renderParticipantsList(); // rebuild buffer + redraw wheel
 
-    renderParticipantsList(); // rebuild buffer + redraw wheel
-
-    animateSpinToIndex(winnerIndex, () => {
-      const winnerName = winner.name || 'Unknown';
-      resultBox.innerHTML = `Pemenang: <span>${winnerName}</span>`;
-      resultBox.classList.add('show');
-      addWinnerToHistory(winner);
-      showWinnerModal(winnerName);
-      isSpinning = false;
-      pointerButton.disabled = false;
-      pointerButton.classList.remove('spinning');
-      wheelCanvas.classList.remove('spinning');
-    });
-  } catch (err) {
-    showMessage(err.message);
+  animateSpinToIndex(winnerIndex, () => {
+    const winnerName = winner.name || 'Unknown';
+    resultBox.innerHTML = `Pemenang: <span>${winnerName}</span>`;
+    resultBox.classList.add('show');
+    addWinnerToHistory(winner);
+    showWinnerModal(winnerName);
     isSpinning = false;
     pointerButton.disabled = false;
     pointerButton.classList.remove('spinning');
     wheelCanvas.classList.remove('spinning');
-    resultBox.textContent = '';
-  }
+  });
 }
 
 function animateSpinToIndex(winnerIndex, onDone) {
@@ -613,27 +554,15 @@ function hideWinnerModal() {
   currentWinner = null;
 }
 
-async function removeWinnerFromList() {
+function removeWinnerFromList() {
   const winnerName = winnerNameEl.textContent;
   if (!winnerName) return;
 
-  try {
-    const res = await fetch('/api/participants/by-name', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: winnerName })
-    });
-    const json = await res.json();
-    if (json.status !== 'success') {
-      throw new Error(json.message || 'Gagal menghapus pemenang');
-    }
-    participants = json.data.participants || [];
-    renderParticipantsList();
-    hideWinnerModal();
-    showMessage(`"${winnerName}" telah dihapus dari daftar peserta.`);
-  } catch (err) {
-    showMessage(err.message);
-  }
+  participants = participants.filter(p => p.name !== winnerName);
+  saveParticipants();
+  renderParticipantsList();
+  hideWinnerModal();
+  showMessage(`"${winnerName}" telah dihapus dari daftar peserta.`);
 }
 
 function showHistoryModal() {
@@ -663,9 +592,9 @@ function startConfetti() {
   confettiContainer.style.zIndex = '45';
   document.body.appendChild(confettiContainer);
 
-  const colors = ['#facc15', '#f97316', '#22c55e', '#38bdf8', '#ef4444'];
+  const colors = ['#facc15', '#f97316', '#22c55e', '#38bdf8', '#ef4444', '#a855f7', '#ec4899', '#06b6d4'];
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 150; i++) {
     const confetti = document.createElement('div');
     confetti.style.position = 'absolute';
     confetti.style.width = '10px';
@@ -775,16 +704,6 @@ closeMessageBtn.addEventListener('click', hideMessageModal);
 messageModal.addEventListener('click', (e) => {
   if (e.target === messageModal || e.target.classList.contains('modal-overlay')) {
     hideMessageModal();
-  }
-});
-
-// Footer scroll show/hide
-window.addEventListener('scroll', () => {
-  const footer = document.getElementById('footer');
-  if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 10) {
-    footer.style.opacity = '1';
-  } else {
-    footer.style.opacity = '0';
   }
 });
 
