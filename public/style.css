@@ -196,10 +196,10 @@ body {
 }
 
 .app-title {
-  font-size: 52px;
-  font-weight: 900;
-  font-family: 'Impact', 'Arial Black', sans-serif;
-  letter-spacing: 0.15em;
+  font-size: 48px;
+  font-weight: 700;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 0.1em;
   margin-bottom: 15px;
   text-align: center;
   position: relative;
@@ -209,19 +209,19 @@ body {
 .app-title span {
   display: inline-block;
   animation: letterBounce 2s ease-in-out infinite;
-  text-shadow: 0 0 15px currentColor;
+  text-shadow: 0 0 10px currentColor;
 }
 
-.app-title span:nth-child(1) { color: #ff0000; animation-delay: 0s; }
-.app-title span:nth-child(2) { color: #ff8000; animation-delay: 0.1s; }
-.app-title span:nth-child(3) { color: #ffff00; animation-delay: 0.2s; }
-.app-title span:nth-child(4) { color: #80ff00; animation-delay: 0.3s; }
-.app-title span:nth-child(5) { color: #00ff00; animation-delay: 0.4s; }
-.app-title span:nth-child(6) { color: #00ff80; animation-delay: 0.5s; }
-.app-title span:nth-child(7) { color: #00ffff; animation-delay: 0.6s; }
-.app-title span:nth-child(8) { color: #0080ff; animation-delay: 0.7s; }
-.app-title span:nth-child(9) { color: #0000ff; animation-delay: 0.8s; }
-.app-title span:nth-child(10) { color: #8000ff; animation-delay: 0.9s; }
+.app-title span:nth-child(1) { color: #b91c1c; animation-delay: 0s; } /* dark red */
+.app-title span:nth-child(2) { color: #14532d; animation-delay: 0.1s; } /* dark green */
+.app-title span:nth-child(3) { color: #eab308; animation-delay: 0.2s; } /* gold */
+.app-title span:nth-child(4) { color: #1e3a8a; animation-delay: 0.3s; } /* dark blue */
+.app-title span:nth-child(5) { color: #7c2d12; animation-delay: 0.4s; } /* brown */
+.app-title span:nth-child(6) { color: #9d174d; animation-delay: 0.5s; } /* wine */
+.app-title span:nth-child(7) { color: #b91c1c; animation-delay: 0.6s; } /* dark red */
+.app-title span:nth-child(8) { color: #14532d; animation-delay: 0.7s; } /* dark green */
+.app-title span:nth-child(9) { color: #eab308; animation-delay: 0.8s; } /* gold */
+.app-title span:nth-child(10) { color: #1e3a8a; animation-delay: 0.9s; } /* dark blue */
 
 .app-title .space {
   display: inline-block;
