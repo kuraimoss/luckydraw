@@ -1,4 +1,4 @@
-name: Deploy Lucky Draw Wheel
+name: Deploy Public Folder to GitHub Pages
 
 on:
   push:
@@ -11,23 +11,44 @@ permissions:
   id-token: write
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ZIP folder public agar bisa diproses artifact baru
+      - name: Prepare public folder
+        run: |
+          mkdir build
+          cp -r public/* build/
+
+      # Upload artifact menggunakan versi terbaru (V4)
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: build
+
   deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Upload folder 'public' ke GitHub Pages
-      - name: Upload public folder
-        uses: actions/upload-pages-artifact@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v4
         with:
-          path: public
+          name: github-pages
+          path: .
 
-      # Deploy ke GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
