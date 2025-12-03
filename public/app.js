@@ -139,8 +139,6 @@ function clearParticipants() {
   saveParticipants();
   currentRotation = 0;
   renderParticipantsList();
-  resultBox.textContent = '';
-  resultBox.classList.remove('show');
 }
 
 // ========== Render list & wheel ==========
@@ -335,8 +333,6 @@ function spin() {
 
   animateSpinToIndex(winnerIndex, () => {
     const winnerName = winner.name || 'Unknown';
-    resultBox.innerHTML = `Pemenang: <span>${winnerName}</span>`;
-    resultBox.classList.add('show');
     addWinnerToHistory(winner);
     showWinnerModal(winnerName);
     isSpinning = false;
