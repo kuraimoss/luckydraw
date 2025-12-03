@@ -195,11 +195,36 @@ body {
   margin-bottom: 14px;
 }
 
-.app-header h1 {
-  font-size: 24px;
-  letter-spacing: 0.03em;
+.app-title {
+  font-size: 48px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
   color: var(--accent-gold);
-  animation: titleGlow 3s ease-in-out infinite alternate;
+  text-shadow:
+    0 0 20px rgba(250, 204, 21, 0.5),
+    0 0 40px rgba(250, 204, 21, 0.3),
+    0 0 60px rgba(250, 204, 21, 0.2);
+  margin-bottom: 20px;
+  animation: titleGlow 3s ease-in-out infinite alternate, titleFloat 6s ease-in-out infinite;
+  background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-soft), var(--accent-gold));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.app-title::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: linear-gradient(45deg, rgba(250, 204, 21, 0.1), rgba(250, 204, 21, 0.05), rgba(250, 204, 21, 0.1));
+  border-radius: 20px;
+  z-index: -1;
+  animation: titleBackground 4s ease-in-out infinite;
 }
 
 @keyframes titleGlow {
@@ -208,6 +233,26 @@ body {
   }
   to {
     text-shadow: 0 0 20px rgba(250, 204, 21, 0.8), 0 0 30px rgba(250, 204, 21, 0.6);
+  }
+}
+
+@keyframes titleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes titleBackground {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 }
 
