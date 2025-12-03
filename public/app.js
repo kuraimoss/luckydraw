@@ -6,7 +6,7 @@ const wheelCanvas = canvas;
 
 // ==== RESOLUSI & UKURAN WHEEL (HD) ====
 const DPR = window.devicePixelRatio || 1;
-const VIEW_SIZE = 700; // ukuran logis / tampilan (px)
+const VIEW_SIZE = 800; // ukuran logis / tampilan (px)
 
 wheelCanvas.width = VIEW_SIZE * DPR;
 wheelCanvas.height = VIEW_SIZE * DPR;
