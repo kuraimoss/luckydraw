@@ -28,6 +28,7 @@ const countLabel = document.getElementById('countLabel');
 // Wheel & hasil
 const resultBox = document.getElementById('resultBox');
 const pointerButton = document.getElementById('pointerButton');
+const shuffleBtn = document.getElementById('shuffleBtn');
 
 // Pengaturan wheel
 const speedRange = document.getElementById('speedRange');
@@ -138,6 +139,18 @@ function clearParticipants() {
   participants = [];
   saveParticipants();
   currentRotation = 0;
+  renderParticipantsList();
+}
+
+function shuffleParticipants() {
+  if (participants.length < 2) {
+    showMessage('Minimal 2 peserta untuk diacak.');
+    return;
+  }
+
+  // Shuffle the participants array
+  participants.sort(() => Math.random() - 0.5);
+  saveParticipants();
   renderParticipantsList();
 }
 
@@ -664,6 +677,9 @@ singleNameInput.addEventListener('keyup', (e) => {
 });
 addBulkBtn.addEventListener('click', addBulkParticipants);
 clearBtn.addEventListener('click', clearParticipants);
+
+// Shuffle button
+shuffleBtn.addEventListener('click', shuffleParticipants);
 
 // Pointer SVG di tengah jadi tombol spin
 pointerButton.addEventListener('click', spin);
