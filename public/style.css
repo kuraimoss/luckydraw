@@ -393,9 +393,9 @@ body {
 /* Shuffle Button */
 .shuffle-btn {
   position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  right: -100px;
+  transform: translateY(-100px);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -414,12 +414,12 @@ body {
 .shuffle-btn:hover {
   background: var(--accent-gold);
   color: #020617;
-  transform: translateX(-50%) scale(1.1);
+  transform: translateY(-100px) scale(1.1);
   box-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
 }
 
 .shuffle-btn:active {
-  transform: translateX(-50%) scale(0.95);
+  transform: translateY(-100px) scale(0.95);
 }
 
 /* Pointer SPIN di sisi kanan, mengarah ke wheel */
